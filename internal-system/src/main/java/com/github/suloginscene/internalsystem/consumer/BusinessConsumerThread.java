@@ -22,10 +22,9 @@ public class BusinessConsumerThread extends Thread {
     private static final String TOPIC_NAME = "business";
     private static final Duration TIMEOUT = Duration.ofSeconds(1L);
 
-    private static final String LOG_FORMAT = "[BusinessConsumer] %s";
+    private static final String LOG_FORMAT = "[%s] %s";
 
     private final InternalLogProducer producer;
-
 
     private AtomicBoolean running;
 
@@ -41,7 +40,10 @@ public class BusinessConsumerThread extends Thread {
 
         while (running.get()) {
             consumer.poll(TIMEOUT)
-                    .forEach((record) -> producer.send(format("consume " + record.value())));
+                    .forEach((record) -> {
+                        producer.send(format("consume " + record.value()));
+                        doCommit(consumer);
+                    });
         }
 
         consumer.close();
@@ -49,8 +51,13 @@ public class BusinessConsumerThread extends Thread {
         producer.send(format("killed"));
     }
 
+    protected void doCommit(KafkaConsumer<String, String> consumer) {
+        producer.send(format("commit!"));
+        consumer.commitSync();
+    }
+
     private String format(String text) {
-        return String.format(LOG_FORMAT, text);
+        return String.format(LOG_FORMAT, this.getClass().getSimpleName(), text);
     }
 
     private KafkaConsumer<String, String> createConsumer() {
@@ -59,6 +66,7 @@ public class BusinessConsumerThread extends Thread {
         configs.put(GROUP_ID_CONFIG, GROUP_ID);
         configs.put(KEY_DESERIALIZER_CLASS_CONFIG, STRING_DESERIALIZER);
         configs.put(VALUE_DESERIALIZER_CLASS_CONFIG, STRING_DESERIALIZER);
+        configs.put(ENABLE_AUTO_COMMIT_CONFIG, false);
         return new KafkaConsumer<>(configs);
     }
 
