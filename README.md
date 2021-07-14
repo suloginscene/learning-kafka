@@ -33,19 +33,25 @@ sudo sh {카프카홈}/bin/kafka-topics \
 ## 시나리오
 
 카프카 클러스터와 api-server, internal-system, log-collector를 모두 실행한 뒤,  
-http 요청으로 동작을 발생시키고 로그 및 토픽의 상태를 확인합니다.
+http 요청으로 관련 동작을 발생시키고 로그 및 토픽의 상태를 확인합니다.
 
 (이미지)
 
-- 정상 시나리오
+a. 정상 시나리오
+  - 2 X 1의 컨슈머들이 BizProducer와 BizConsumer의 로그를 수집한다.
+  - 데이터 생산: api-server의 a_normal.http
   
-- 장애 시나리오 1
+b. 장애 시나리오 1 : 컨슈머 중단
+  - BizConsumer가 중단되었다가 재시작하면 그 사이 쌓여있던 메시지를 빠짐없이 가져온다.
+  - 컨슈머 중단: internal-system의 b_consumer_run_control.http
   
-- 장애 시나리오 2
+c. 장애 시나리오 2 : 커밋 전 실패
+  - BizConsumer가 커밋을 하지 않으면, 다음 메시지로 넘어가지 않는다.
+
+d. 장애 시나리오 3
+  - 리더 브로커를 종료해도, ISR이 리더를 승계하여 이상없이 동작한다.
   
-- 장애 시나리오 3
-  
-- 성능 시나리오
+e. 성능 시나리오
 
 
 
