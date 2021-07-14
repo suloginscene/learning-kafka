@@ -1,7 +1,6 @@
 package com.github.suloginscene.apiserver.producer;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -37,7 +36,7 @@ public class BusinessProducer {
     }
 
     public void send(String value) {
-        ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC_NAME, value);
+        ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC_NAME, String.valueOf(value.hashCode()), value);
         producer.send(record);
 
         logProducer.send(format("send " + record.value()));

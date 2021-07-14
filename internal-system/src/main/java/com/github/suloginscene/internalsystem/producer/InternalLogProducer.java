@@ -31,7 +31,7 @@ public class InternalLogProducer {
     }
 
     public void send(String value) {
-        producer.send(new ProducerRecord<>(TOPIC_NAME, value));
+        producer.send(new ProducerRecord<>(TOPIC_NAME, String.valueOf(value.hashCode()), value));
     }
 
 }
