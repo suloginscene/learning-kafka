@@ -5,9 +5,11 @@
 
 ## 구성하기
 
-- 이 프로젝트 clone
+- 이 프로젝트 clone (docker-compose.yml을 포함)
+  - 참고: [docker-compose 설정파일 모음](https://github.com/conduktor/kafka-stack-docker-compose)
 - 카프카 다운로드 (https://kafka.apache.org/downloads)  
   cli를 사용하기 위한 다운로드입니다. 카프카 자체는 도커로 실행할 예정이므로, 로컬에서 카프카를 실행하시면 포트가 중복됩니다.
+  
 
 ``` shell
 # 프로젝트 루트 경로에서
@@ -32,9 +34,9 @@ sudo sh {카프카홈}/bin/kafka-topics \
 ## 시나리오
 
 카프카 클러스터와 api-server, internal-system, log-collector를 모두 실행한 뒤,  
-http 요청으로 관련 동작을 발생시키고 로그 및 토픽의 상태를 확인합니다.
+각 서브 프로젝트 test 폴더의 http 요청으로 관련 동작을 발생시키고 로그 및 토픽의 상태를 확인합니다.
 
-(이미지)
+![시나리오](./scenarios.png)
 
 a. 정상 시나리오
 
@@ -61,6 +63,3 @@ d. 장애 시나리오 3
 e. 성능 시나리오
 
 - 파티션과 컨슈머를 추가하면, 더욱 빠르게 동작한다.
-
-## 참고자료
-
