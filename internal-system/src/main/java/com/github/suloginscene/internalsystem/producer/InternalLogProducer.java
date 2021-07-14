@@ -1,5 +1,6 @@
 package com.github.suloginscene.internalsystem.producer;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -10,6 +11,7 @@ import javax.annotation.PostConstruct;
 import java.util.Properties;
 
 @Component
+@Slf4j
 public class InternalLogProducer {
 
     private static final String BOOTSTRAP_SERVERS = "localhost:9092";
@@ -31,7 +33,13 @@ public class InternalLogProducer {
     }
 
     public void send(String value) {
-        producer.send(new ProducerRecord<>(TOPIC_NAME, String.valueOf(value.hashCode()), value));
+        producer.send(
+                new ProducerRecord<>(TOPIC_NAME, String.valueOf(value.hashCode()), value),
+                (metadata, exception) -> {
+                    if (exception == null) log.info("send success: {}", value);
+                    else log.error("send fail: {}", exception.toString());
+                }
+        );
     }
 
 }
