@@ -7,7 +7,7 @@
 
 - 이 프로젝트 clone (docker-compose.yml을 포함)
   - 참고: [docker-compose 설정파일 모음](https://github.com/conduktor/kafka-stack-docker-compose)
-- 카프카 다운로드 (https://kafka.apache.org/downloads)  
+- 카프카 다운로드  
   cli를 사용하기 위한 다운로드입니다. 카프카 자체는 도커로 실행할 예정이므로, 로컬에서 카프카를 실행하시면 포트가 중복됩니다.
   
 
@@ -29,7 +29,7 @@ sudo sh {카프카홈}/bin/kafka-topics \
   --create --topic log
 ```
 
-- `localhost:8000`에서 토픽 상태 확인
+- `localhost:8000`(topics ui)에서 토픽 상태 확인
 
 ## 시나리오
 
@@ -40,7 +40,7 @@ sudo sh {카프카홈}/bin/kafka-topics \
 
 a. 정상 시나리오
 
-- 2Group X 1Consumer가 BizProducer와 BizConsumer의 로그를 수집한다.
+- 2Group x 1Consumer가 BizProducer와 BizConsumer의 로그를 수집한다.
 - 데이터 생산: api-server의 a_normal.http
 
 b. 장애 시나리오 1 : 컨슈머 중단
@@ -59,6 +59,11 @@ c. 장애 시나리오 2 : 커밋 전 실패
 d. 장애 시나리오 3
 
 - 리더 브로커를 종료해도, ISR이 리더를 승계하여 이상없이 동작한다.
+- `localhost:8000`의 business 토픽 - 파티션 탭에서 현재 리더 브로커를 확인한다.  
+  도커에서 리더 브로커를 정지시키고, topics ui에서 리더가 변경되었음을 확인한다.  
+  다시 데이터를 생산하고 정상 동작하는지 확인한다.  
+  브로커를 다시 실행하면 클러스터에 포함되며 in-sync 상태가 된다.(리더 자격은 복귀되지 않는다.)
+  
 
 e. 성능 시나리오
 
