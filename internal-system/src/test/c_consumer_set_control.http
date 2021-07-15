@@ -1,4 +1,4 @@
-PUT localhost:18080/non-commit
+PUT localhost:18080/switch/non-commit
 
 ###
-PUT localhost:18080/commit
+PUT localhost:18080/switch/commit

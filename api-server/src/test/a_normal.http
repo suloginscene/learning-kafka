@@ -1,7 +1,7 @@
-GET localhost:8080/api/val1
+POST localhost:8080/api/val1
 
 ###
-GET localhost:8080/api/val2
+POST localhost:8080/api/val2
 
 ###
-GET localhost:8080/api/val3
+POST localhost:8080/api/val3

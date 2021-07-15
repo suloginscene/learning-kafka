@@ -24,10 +24,11 @@ public class InternalController {
 
     @PostMapping("/run")
     public void runThread() {
+        businessConsumerThreadRunner.init();
         businessConsumerThreadRunner.run(null);
     }
 
-    @PutMapping("/{type}")
+    @PutMapping("/switch/{type}")
     public void switchThread(@PathVariable String type) throws InterruptedException {
         stopThread();
 
@@ -37,7 +38,7 @@ public class InternalController {
                         : new BusinessConsumerThread(internalLogProducer)
         );
 
-        runThread();
+        businessConsumerThreadRunner.run(null);
     }
 
 }
